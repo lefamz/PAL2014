@@ -47,8 +47,8 @@ int main() {
 
 				digit=atoi(buff);
 //				cout << "Digit: "<< digit << endl;
-				array[pos][i]=digit;
-				pos++;
+				array[i][pos]=digit;
+				pos=1;
 			}
 
 		}
@@ -81,8 +81,8 @@ int main() {
 		while(ss.getline(buff,10,' ')){
 			digit=atoi(buff);
 		//	cout << "Digit: "<< digit << endl;
-			array[pos][i]=digit;
-			pos++;
+			array[i][pos]=digit;
+			pos=1;
 		}
 	}
 
@@ -91,18 +91,19 @@ int main() {
 	double dst = 0;
 	double d = 0;
 	for(int i=0;i<nNodes-1;i++){
-		d = dist(array[0][i],array[1][i],array[0][i+1],array[1][i+1]);
+		d = dist(array[i][0],array[i][1],array[i+1][0],array[i+1][1]);
 	//	cout << d << endl;
 		dst+=d;
 
 	}
-	d = dist(array[0][nNodes-1],array[1][nNodes-1],array[0][0],array[1][0]);
+	d = dist(array[nNodes-1][0],array[nNodes-1][1],array[0][0],array[0][1]);
 	dst+= d;
 
 	//cout << d << endl;
 	cout << ((int)ceil(5*dst)) << endl;
 
-
+	for(int i=0;i<nNodes;i++) delete [] array[i];
+	delete [] array;
 
 	return 0;
 }
