@@ -1,3 +1,5 @@
 *.o
 *.mk
 .metadata
+.cproject
+.project
