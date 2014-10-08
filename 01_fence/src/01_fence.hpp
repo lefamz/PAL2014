@@ -8,14 +8,18 @@
 #ifndef _FENCE_HPP_
 #define _FENCE_HPP_
 
-#define DEBG 0
+#define DEBG 1
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
+#include <math.h>
 
 using namespace std;
+
+int main();
+double dist(int x,int y,int w, int z);
 
 
 
