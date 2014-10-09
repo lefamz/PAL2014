@@ -1,3 +1,5 @@
+*kdev*
+*CMake*
 *.o
 *.mk
 .metadata
@@ -6,3 +8,4 @@
 *.d
 *Debug
 *zip
+*build
