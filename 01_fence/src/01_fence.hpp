@@ -8,7 +8,7 @@
 #ifndef _FENCE_HPP_
 #define _FENCE_HPP_
 
-#define DEBG 1
+#define DEBG 0
 
 #include <iostream>
 #include <fstream>
@@ -19,7 +19,7 @@
 using namespace std;
 
 int main();
-double dist(int x,int y,int w, int z);
+double dist(unsigned int x,unsigned int y,unsigned int w,unsigned int z);
 
 
 
