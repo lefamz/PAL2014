@@ -3,15 +3,23 @@
 #include <fstream>
 #include <inttypes.h>
 #include <vector>
+#include <sstream>
+#include <math.h>
+
+#include "definitions.hpp"
+
+#ifndef MAIN_H
+#define MAIN_H
+
+#include "Node.cpp"
+
+#endif /*MAIN_H*/
 
 #define DBG 1
-
-typedef uint16_t mint;
-typedef double mdouble;
 
 
 
 using namespace std;
 
-void readFromFile();
-void readSTD();
+mdouble dist(mint,mint,mint,mint);
+void deleteNodeVector(vector<Node *> * toDel);
