@@ -6,6 +6,7 @@ int main(int argc, char **argv) {
   mint nNodes = 0;
   mint ** coords;
   mdouble ** dists;
+  uint8_t ** conflicts;
   
  /* Node root(2,2);
   
@@ -54,6 +55,13 @@ int main(int argc, char **argv) {
   
   for(mint i=0;i<nNodes;i++){
     dists[i] = new mdouble[nNodes];
+  }
+  
+  mint nEdges = ceil((nNodes*(nNodes-1))/2);
+  
+  conflicts = new uint8_t * [nEdges];
+  for(int i=0;i<nEdges;i++){
+    conflicts[i] = new uint8_t[nEdges];
   }
   
 #if DBG
@@ -132,6 +140,7 @@ int main(int argc, char **argv) {
   for(mint i = 0;i<nNodes;i++){
     (*oldGen)[i]= new Node(0,(mdouble)0,nNodes);
   }
+  
   /*
   while(level<nNodes){
     
@@ -141,9 +150,11 @@ int main(int argc, char **argv) {
   
   for(mint i=0;i<nNodes;i++) delete [] coords[i];
   for(mint i=0;i<nNodes;i++) delete [] dists[i];
+  for(mint i=0;i<nEdges;i++) delete [] conflicts[i];
   
   delete [] dists;
   delete [] coords;
+  delete [] conflicts;
   
   deleteNodeVector(oldGen);
   
