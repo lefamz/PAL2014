@@ -7,15 +7,13 @@
 class Node{
   
 public:
-  Node(mint level,mdouble l,mint nNodes);
+  Node(mdouble l);
   ~Node();
   
-  // ids of not assigned  ids avalable for next set
-  std::vector<mint> * availableIDs;
-  // ids of coords in this set
-  std::vector<mint> * ids;
-  mdouble len;
+  // mask of ids of not assigned  ids avalable for next set
+  mint avNodesMask;
+  // mask ids of coords in this set
+  mint idsMask;
   
-  void cpyIds(std::vector<mint> * oldIDs);
-  void cpyAvaiIds(std::vector<mint> * oldAvaiIDs);
+  mdouble len;
 };

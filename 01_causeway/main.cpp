@@ -58,12 +58,7 @@ int main(int argc, char **argv) {
   }
   
   mint nEdges = ceil((nNodes*(nNodes-1))/2);
-  
-  conflicts = new uint8_t * [nEdges];
-  for(int i=0;i<nEdges;i++){
-    conflicts[i] = new uint8_t[nEdges];
-  }
-  
+    
 #if DBG
   for(mint i=0;i<nNodes;i++){
     s.clear();
@@ -138,23 +133,35 @@ int main(int argc, char **argv) {
   mint level = 0;
   
   for(mint i = 0;i<nNodes;i++){
-    (*oldGen)[i]= new Node(0,(mdouble)0,nNodes);
+    (*oldGen)[i]= new Node(0);
   }
   
-  /*
-  while(level<nNodes){
-    
-   // newGen = new vector<Node *>(pow(nNodes,level));
-  }
-  */
+  uLong oldGenSize = nNodes;
+  
+  mint x[2];
+  mint y[2];
+  mint w[2];
+  mint z[2];
+  
+  x[0] = 1; x[1] = 0;
+  y[0] = 1; y[1] = 2;
+  w[0] = 0; w[1] = 3;
+  z[0] = 4; z[1] = 3;
+  
+  cout << "Intersects: " << intersects(x,y,w,z) << endl;
+  
+  /*while(level<nNodes){
+    oldGenSize = oldGen->size();
+    newGen = new vector<Node *>(oldGenSize * (nNodes-level-1));
+    level++;
+  }*/
+  
   
   for(mint i=0;i<nNodes;i++) delete [] coords[i];
   for(mint i=0;i<nNodes;i++) delete [] dists[i];
-  for(mint i=0;i<nEdges;i++) delete [] conflicts[i];
   
   delete [] dists;
   delete [] coords;
-  delete [] conflicts;
   
   deleteNodeVector(oldGen);
   
@@ -171,4 +178,49 @@ void deleteNodeVector(vector<Node *> * toDel){
   }
   
   delete toDel;
+}
+
+bool intersects(mint x[], mint y[], mint w[], mint z[]){
+  mdouble denominator = ((x[0] - y[0])*(w[1] - z[1])) - ((x[1] - y[1])*(w[0] - z[0]));
+  
+  if (denominator == 0) return 0;
+  
+  mdouble a = ((x[0]*y[1]) - (x[1]*y[0]));
+  mdouble b = ((w[0]*z[1]) - (w[1]*z[0]));
+  
+  mdouble interX = ((a*(w[0] - z[0])) - ((x[0] - y[0])*b))/denominator;
+  mdouble interY = ((a*(w[1] - z[1])) - ((x[1] - y[1])*b))/denominator;
+  
+#if DBG
+  cout << "inter x: " << interX << " interY: " << interY << endl;
+#endif
+  
+  mint minA=0,maxA=0,minB=0,maxB=0;
+  
+  minA=min(x[0],y[0]);
+  maxA=max(x[0],y[0]);
+  minB=min(x[1],y[1]);
+  maxB=max(x[1],y[1]);
+
+#if DBG
+  cout << "minX: " << minA << " maxX: " << maxA << endl;
+  cout << "minY: " << minB << " maxY: " << maxB << endl;
+#endif
+  
+  bool inFirst = (interX <= maxA) && (interX >= minA) && (interY >= minB) && (interY <= maxB);
+  
+  minA=min(w[0],z[0]);
+  maxA=max(w[0],z[0]);
+  minB=min(w[1],z[1]);
+  maxB=max(w[1],z[1]);
+  
+#if DBG
+  cout << "minX: " << minA << " maxX: " << maxA << endl;
+  cout << "minY: " << minB << " maxY: " << maxB << endl;
+#endif
+  
+  bool inSecond = (interX <= maxA) && (interX >= minA) && (interY >= minB) && (interY <= maxB);
+  
+  if (inFirst && inSecond) return 1;
+  return 0;
 }
