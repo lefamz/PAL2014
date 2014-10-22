@@ -2,6 +2,7 @@
 #define CLASSES_HPP
 
 #include "definitions.hpp"
+#include <iostream>
 #include <list>
 
 using namespace std;
@@ -19,6 +20,11 @@ public:
     
     ITL=0;
     len = l;
+  }
+  
+  bool operator < (const Edge & e) const {
+    std::cout << "CMP";
+    return this->len < e.len;
   }
   
   nint id;
