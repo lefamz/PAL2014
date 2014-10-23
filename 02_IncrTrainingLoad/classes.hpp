@@ -20,6 +20,7 @@ public:
     
     ITL=0;
     len = l;
+    
   }
   
   bool operator < (const Edge & e) const {
@@ -35,11 +36,7 @@ public:
 };
 
 class Node{
-public:
-  Node(sint i){
-    id = i;
-  }
-  sint id;
+public: 
   list<Edge *> incEdges;
 };
 #endif //CLASSES_HPP

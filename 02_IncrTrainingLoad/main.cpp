@@ -51,7 +51,7 @@ void loadData(string file, sint & nNodes, nint & nEdges,
     cout << "nNodes: " << nNodes <<  " nEdges: " << nEdges << endl;
 #endif
     for(sint i=0;i<nNodes;i++){
-      Node n(i);
+      Node n;
       nodes->push_back(n);
     }
     
