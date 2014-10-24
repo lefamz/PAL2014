@@ -17,9 +17,17 @@
 
 #define DBG 1
 
+#if DBG
+#include <ctime>
+//#include <tr1/unordered_map>
+#endif
 using namespace std;
-void loadData(string,sint &,nint &,vector<Node> *,vector<Edge> *);
-void deleteData(vector<Node > *,vector<Edge > *);
+
+sint calculateITL(nint,vector<Edge> *);
+void controlDump(nint,vector<Edge> *);
+void createStructure(sint,nint,vector< list<Edge *> > * ,vector<Edge> *);
+void loadData(string,sint &,nint &,vector< list<Edge *> > *,vector<Edge> *);
+void deleteData(vector< list<Edge *> > *,vector<Edge > *);
 //bool edgeComparator();
 
 #endif /*MAIN_H*/
