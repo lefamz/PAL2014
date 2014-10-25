@@ -18,20 +18,19 @@ public:
       rightNode=node2;
     }
     
-    ITL = 0;
-    estimatedITL=0;
+    leftITL = 0;
+    rightITL=0;
     len = l;
     
   }
   
   bool operator < (const Edge & e) const {
     //std::cout << "CMP";
-    return this->len > e.len;
+    return this->len < e.len;
   }
   
   sint leftNode,rightNode;
-  sint ITL,estimatedITL;
+  sint leftITL,rightITL;
   sint len;
-  list<Edge *> leftEdges,rightEdges;
 };
 #endif //CLASSES_HPP

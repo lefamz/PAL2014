@@ -1,71 +1,110 @@
 #include "main.hpp"
 
 int main(int argc, char **argv) {
-    string file = "../examples/pub09";
+    string file = "../examples/pub08";
     vector< list<Edge *> > * nodes = new vector< list<Edge *> >();
     vector<Edge> * edges = new vector<Edge>();
     
     sint nNodes;
     nint nEdges;
     
-    clock_t begin = clock();
+   // clock_t begin = clock();
     
     loadData(file,nNodes,nEdges,nodes,edges);    
-    createStructure(nNodes,nEdges,nodes,edges);
+    createStructure(nodes,edges);
  //   controlDump(nEdges,edges);
-  //  calculateITL(nEdges,edges);
+    cout << calculateITL(edges,nodes) << endl;
     
    // tr1::unordered_map<string, int> map;
     
     
-    clock_t end = clock();
+  //  clock_t end = clock();
    
-   cout << (double)(end-begin)/CLOCKS_PER_SEC << endl;
+  // cout << (double)(end-begin)/CLOCKS_PER_SEC << endl;
 
    
     
     deleteData(nodes,edges);
 }
 
-sint calculateITL(nint nEdges,vector<Edge> * edges){
+sint calculateITL(vector<Edge> * edges,vector< list<Edge *> > * nodes){
   sint maxITL = 0;
   
-  vector<Edge>::iterator it;
+  vector<Edge>::iterator edIt;
+  list<Edge *>::iterator lIt;
   
-  vector<Edge *> currITL;
-  list<Edge *> front;
-  sint prevNode;
-  
-  for(it=edges->begin();it!=edges->end();++it){
-    Edge e = (*it);
-    front.push_back(&e);
+  for(edIt=edges->begin();edIt!=edges->end();++edIt){
+    sint left = (*edIt).leftNode;
+    sint right = (*edIt).rightNode;
+    sint len = (*edIt).len;
+    
+    list<Edge *> lefties = (*nodes)[left];
+    list<Edge *> righties = (*nodes)[right];
+    
+    nint i = 0;
+    sint hlp = 0;
+    
+    for(lIt=lefties.begin();lIt!=lefties.end();++lIt){
+      Edge * e = (*lIt);
+      if(len > e->len){
+	i++;
+	if(left == e->leftNode && hlp < e->rightITL){
+	  hlp = e->rightITL;
+	}
+	if (left == e->rightNode && hlp < e->leftITL){
+	  hlp = e->leftITL;
+	}
+      }
+    }
+    
+    if(i>0){
+      (*edIt).leftITL = (*edIt).len + hlp;
+    } else {
+      (*edIt).leftITL=(*edIt).len;
+    }
+    
+    i = 0;
+    hlp = 0;
+    
+    for(lIt=righties.begin();lIt!=righties.end();++lIt){
+      Edge * e = (*lIt);
+      if(len > e->len){
+	i++;
+	if(right == e->leftNode && hlp < e->rightITL){
+	  hlp = e->rightITL;
+	}
+	if (right == e->rightNode && hlp < e->leftITL){
+	  hlp = e->leftITL;
+	}
+      }
+    }
+    
+    if(i>0){
+      (*edIt).rightITL = (*edIt).len + hlp;
+    } else {
+      (*edIt).rightITL=(*edIt).len;
+    }
+    
+    if (maxITL < (*edIt).leftITL){
+      maxITL = (*edIt).leftITL;
+    } else if(maxITL < (*edIt).rightITL){
+      maxITL = (*edIt).rightITL;
+    }
+   // cout << (*edIt).leftITL << " " << (*edIt).rightITL << endl;
+    
   }
   
- /**/ while(!front.empty()){
-    Edge e = *(front.front());
-    front.pop_front();
-    
-    list<Edge *>::iterator ofspring;
-    for(ofspring=e.)
-    
-  }/**/
-  
-  
-  
+  return maxITL;
 }
 
 void controlDump(nint nEdges,vector<Edge> * edges){
    /**/  for(int i = 0;i<nEdges;i++) {
-      cout << i << " len: " << (*edges)[i].len << endl;
-      cout << "left neigh: " << (*edges)[i].leftEdges.size() << endl;
-      cout << "right neigh: " << (*edges)[i].rightEdges.size() << endl;
-      
-     if(i == 2)  cout << (*edges)[i].leftEdges.front()->len << endl;
+    
 	
     }/**/
 }
 
-void createStructure(sint nNodes,nint nEdges,vector< list<Edge *> > * nodes,vector<Edge> * edges){
+void createStructure(vector< list<Edge *> > * nodes,vector<Edge> * edges){
   
    
   
@@ -87,7 +126,7 @@ void createStructure(sint nNodes,nint nEdges,vector< list<Edge *> > * nodes,vect
      // cout << pE << " " << pE->len <<endl;
    }/**/
    
-   for(it=edges->begin();it!=edges->end();++it){
+ /*  for(it=edges->begin();it!=edges->end();++it){
      
      Edge * e = &(*it);
      
@@ -108,7 +147,7 @@ void createStructure(sint nNodes,nint nEdges,vector< list<Edge *> > * nodes,vect
 	}
      }
 
-   }
+   }*/
    
    
 }

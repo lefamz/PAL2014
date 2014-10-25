@@ -15,7 +15,7 @@
 #include "definitions.hpp"
 #include "classes.hpp"
 
-#define DBG 1
+#define DBG 0
 
 #if DBG
 #include <ctime>
@@ -23,9 +23,9 @@
 #endif
 using namespace std;
 
-sint calculateITL(nint,vector<Edge> *);
+sint calculateITL(vector<Edge> *,vector< list<Edge *> > *);
 void controlDump(nint,vector<Edge> *);
-void createStructure(sint,nint,vector< list<Edge *> > * ,vector<Edge> *);
+void createStructure(vector< list<Edge *> > * ,vector<Edge> *);
 void loadData(string,sint &,nint &,vector< list<Edge *> > *,vector<Edge> *);
 void deleteData(vector< list<Edge *> > *,vector<Edge > *);
 //bool edgeComparator();
