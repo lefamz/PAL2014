@@ -20,8 +20,8 @@
 using namespace std;
 
 void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint &nEdges,
-	      nint &maxDist,nint &home,nint &target,vector<pNN> * graph,
-	      vector<pNN> * gasGraph,vector<nint> & oysterCities);
+	      nint &maxDist,nint &home,nint &target,vector<pNN> ** graph,
+	      vector<pNN> ** gasGraph,vector<nint> & oysterCities);
 
 
 #endif /*MAIN_H*/

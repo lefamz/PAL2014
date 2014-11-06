@@ -1,6 +1,5 @@
 #include "main.hpp"
 
-
 int main(int argc, char **argv) {
     // petrol limit
     nint maxDist;
@@ -15,20 +14,19 @@ int main(int argc, char **argv) {
     nint home,target;
     
     const nint infinity = std::numeric_limits<nint>::max();
-    
+      
     vector<pNN> * origGraph;
     vector<pNN> * gasGraph;
-    vector<nint> oysterCities;
+    vector<nint> oysterCities; 
     
-    loadData("../examples/01",nNNodes,nONodes,nNodes,nEdges,maxDist,home,target,origGraph,gasGraph,oysterCities);
-    
+    loadData("../examples/pub01",nNNodes,nONodes,nNodes,nEdges,maxDist,home,target,&origGraph,&gasGraph,oysterCities);
     
     return 0;
 }
 /**/
 void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint &nEdges,
-	      nint &maxDist,nint &home,nint &target,vector<pNN> * graph,
-	      vector<pNN> * gasGraph,vector<nint> & oysterCities){
+	      nint &maxDist,nint &home,nint &target,vector<pNN> ** graph,
+	      vector<pNN> ** gasGraph,vector<nint> & oysterCities){
     string s;
     char buff[7];
     stringstream ss;
@@ -52,16 +50,8 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
     
     nNodes = nONodes + nNNodes;
     
-    vector<pNN> hlp[nNodes];
-    vector<pNN> hlp2[nNodes];/**/
-   /**/ graph = hlp;
-    gasGraph = hlp2;
-    for(nint i = 0;i<nNodes;i++){
-      (*graph)[i]=new vector<pNN>();
-      (*gasGraph)[i]=new vector<pNN>();
-    }
-    
-    
+    *graph = new vector<pNN>[nNodes];
+    *gasGraph = new vector<pNN>[nNodes];    
     
     ss.getline(buff,7,' ');
     nEdges = (nint)(atoi(buff));
@@ -79,7 +69,8 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
     s.clear();
     
 #if DBG
-  //  cout << "nNodes: " << nNodes <<  " nEdges: " << nEdges << endl;
+    cout << "nNodes: " << nNodes <<  " nEdges: " << nEdges << " nONodes: " << nONodes << " nNNodes: " << nNNodes << " maxDist: " << maxDist
+    << " h: " << home << " t: " << target << endl;
 #endif
   
     for(nint i=0;i<nONodes;i++){
@@ -101,25 +92,32 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
 
     }
     
+    /*for(int i=0;i<nNodes;i++){
+      cout << origGraph[i].size() << endl;
+    }*/
+    
     for(nint i=0;i<nEdges;i++){
 #if DBG
       getline(inFile,s);      
 #else
       getline(cin,s);
 #endif
-      ss.getline(buff,5,' ');
-      sint from = (sint)(atoi(buff));
+      
+      ss << s;
       
       ss.getline(buff,7,' ');
-      sint to = (sint)(atoi(buff));
+      nint from = (nint)(atoi(buff));
       
-      ss.getline(buff,6,' ');
-      sint len = (sint)(atoi(buff));
+      ss.getline(buff,7,' ');
+      nint to = (nint)(atoi(buff));
+      
+      ss.getline(buff,7,' ');
+      nint len = (nint)(atoi(buff));
       
       (*graph)[from].push_back(pNN(len,to));
       (*graph)[to].push_back(pNN(len,from));
 #if DBG
-   cout << from << " " << to << " "  << len << endl;
+   cout << i << " ---- "<< from << " " << to << " "  << len << endl;
 #endif    
       s.clear();
       ss.clear();
