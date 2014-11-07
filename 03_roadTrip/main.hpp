@@ -12,9 +12,8 @@
 #include <limits>
 
 #include "definitions.hpp"
-#include "classes.hpp"
 
-#define DBG 1
+#define DBG 0
 
 using namespace std;
 
@@ -23,7 +22,7 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
 	      vector<pNN> ** gasGraph,vector<nint> & oysterCities);
 
 void limitedDijkstra(vector<pNN> [],vector<nint> &,nint,nint,nint,nint);
-
+void dijkstra(vector<pNN> [],vector<nint> &,nint,nint,nint);
 
 #endif /*MAIN_H*/
 

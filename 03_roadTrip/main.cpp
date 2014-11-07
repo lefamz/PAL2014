@@ -19,41 +19,65 @@ int main(int argc, char **argv) {
     vector<pNN> * gasGraph;
     vector<nint> oysterCities; 
     
-    loadData("../examples/pub01",nNNodes,nONodes,nNodes,nEdges,maxDist,home,target,&origGraph,&gasGraph,oysterCities);
+    loadData("../examples/pub07",nNNodes,nONodes,nNodes,nEdges,maxDist,home,target,&origGraph,&gasGraph,oysterCities);
     
     vector<nint> firstStage(nNodes,infinity);
     limitedDijkstra(origGraph,firstStage,home,target,maxDist,nNodes);
     
-    if(firstStage[target] < infinity){
+    
+  /**/  if(firstStage[target] < infinity){
       cout << firstStage[target] << endl;
       return 0;
     }
     
-    
-     /**/for(int i=0;i<nNodes;i++){
-      cout << firstStage[i] << endl;
-    }/**/
+  /*/  
+    cout << "firstStage: ";
+     for(int i=0;i<nNodes;i++){
+      cout << firstStage[i] << " ";
+    }
+    cout << endl;
+    /**/
     
     for(nint i =0;i<nONodes;i++){
       nint oCity = oysterCities[i];
-      cout << oCity << endl;
-      //TODO podminka spatne
-      if(firstStage[oCity] < infinity && i!=home){
-	gasGraph[home].push_back(pNN(firstStage[oCity],oCity));
+   //   cout << oCity << endl;
+      
+      if(oCity!=home && oCity!=target){
+	
+	if (firstStage[oCity] < infinity){	    
+	  gasGraph[home].push_back(pNN(oCity,firstStage[oCity]));
 	//gasGraph[oCity].push_back(pNN(firstStage[oCity],home));
+	}
+	
 	vector<nint> secondStage(nNodes,infinity);
 	limitedDijkstra(origGraph,secondStage,oCity,target,maxDist,nNodes);
 	
-	//TODO propojit oysterCities mezi sebou a propojit oysterCities s cilem, dijkstru na vsechny o cities
-	for(nint j =0;j<nNodes;j++) cout << secondStage[j] << " ";
-	cout << endl;
+	for(nint j =0;j<nONodes;j++){
+	  nint oCity2 = oysterCities[j];
+	//  cout << secondStage[oCity2] << " ";
+	  if (secondStage[oCity2] < infinity){
+	    gasGraph[oCity].push_back(pNN(oCity2,secondStage[oCity2]));
+	//    gasGraph[oCity2].push_back(pNN(oCity,secondStage[oCity2]));
+	  }
+	}
+	
+	if(secondStage[target] < infinity){
+	  gasGraph[oCity].push_back(pNN(target,secondStage[target]));
+	}
+	//cout << endl;
       }
     }
     
-    for(nint i = 0;i<nNodes;i++){
+   /* for(nint i = 0;i<nNodes;i++){
       cout << gasGraph[i].size() << " ";
     }
-    cout << endl;
+    cout << endl;*/
+    
+    firstStage.assign(nNodes,infinity);
+    
+    dijkstra(gasGraph,firstStage,home,target,nNodes);
+    
+    cout << firstStage[target] << endl;
     
     return 0;
 }
@@ -99,6 +123,48 @@ void limitedDijkstra(vector<pNN> graph[],vector<nint> & dists,nint start,nint ta
   } 
 }
 
+void dijkstra(vector<pNN> graph[],vector<nint> & dists,nint start,nint target, nint nNodes){
+  // vertexes  
+  nint u,v;
+  //distances
+  nint d,w;
+  
+  priority_queue< pNN ,vector<pNN>, greater<pNN> > queue;
+  
+  queue.push(pNN(0,start));
+  
+  dists[start]=0;
+  
+  while(!queue.empty()){
+    // vertex
+    u = queue.top().second;
+    //distance
+    d = queue.top().first;
+    
+    queue.pop();
+    
+    if(dists[u] < d){
+      continue;
+    }
+    
+   // if(u==target) return;
+    
+    // neighbour search
+    for(nint i=0;i<graph[u].size();i++){
+      v = graph[u][i].first;
+      w = graph[u][i].second;
+      
+      nint nDist = dists[u] + w;
+      
+      if(dists[v] > nDist){
+	dists[v] = nDist;
+	queue.push(pNN(nDist,v));
+      }
+    }
+  } 
+}
+
+
 void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint &nEdges,
 	      nint &maxDist,nint &home,nint &target,vector<pNN> ** graph,
 	      vector<pNN> ** gasGraph,vector<nint> & oysterCities){
@@ -118,10 +184,10 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
     ss << s;
     
     ss.getline(buff,7,' ');
-    nONodes = (sint)(atoi(buff));
+    nONodes = (nint)(atoi(buff));
    
     ss.getline(buff,7,' ');
-    nNNodes = (sint)(atoi(buff));
+    nNNodes = (nint)(atoi(buff));
     
     nNodes = nONodes + nNNodes;
     
@@ -144,8 +210,8 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
     s.clear();
     
 #if DBG
-  //  cout << "nNodes: " << nNodes <<  " nEdges: " << nEdges << " nONodes: " << nONodes << " nNNodes: " << nNNodes << " maxDist: " << maxDist
-   // << " h: " << home << " t: " << target << endl;
+  /*  cout << "nNodes: " << nNodes <<  " nEdges: " << nEdges << " nONodes: " << nONodes << " nNNodes: " << nNNodes << " maxDist: " << maxDist
+    << " h: " << home << " t: " << target << endl;*/
 #endif
   
     for(nint i=0;i<nONodes;i++){
@@ -157,7 +223,7 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
       ss << s;
        
       ss.getline(buff,7,' ');
-      nint index = (sint)(atoi(buff));
+      nint index = (nint)(atoi(buff));
       oysterCities.push_back(index);  
 #if DBG
    //   cout << index << endl;
