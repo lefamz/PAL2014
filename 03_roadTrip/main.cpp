@@ -21,12 +21,16 @@ int main(int argc, char **argv) {
     
     loadData("../examples/pub07",nNNodes,nONodes,nNodes,nEdges,maxDist,home,target,&origGraph,&gasGraph,oysterCities);
     
+    if(home==target){
+      return 0;
+    }
+    
     vector<nint> firstStage(nNodes,infinity);
     limitedDijkstra(origGraph,firstStage,home,target,maxDist,nNodes);
     
     
-  /**/  if(firstStage[target] < infinity){
-      cout << firstStage[target] << endl;
+  /**/if(firstStage[target] < infinity){
+	cout << firstStage[target] << endl;
       return 0;
     }
     
@@ -55,7 +59,7 @@ int main(int argc, char **argv) {
 	for(nint j =0;j<nONodes;j++){
 	  nint oCity2 = oysterCities[j];
 	//  cout << secondStage[oCity2] << " ";
-	  if (secondStage[oCity2] < infinity){
+	  if (oCity != oCity2 && secondStage[oCity2] < infinity){
 	    gasGraph[oCity].push_back(pNN(oCity2,secondStage[oCity2]));
 	//    gasGraph[oCity2].push_back(pNN(oCity,secondStage[oCity2]));
 	  }
@@ -147,7 +151,7 @@ void dijkstra(vector<pNN> graph[],vector<nint> & dists,nint start,nint target, n
       continue;
     }
     
-   // if(u==target) return;
+    if(u==target) return;
     
     // neighbour search
     for(nint i=0;i<graph[u].size();i++){
