@@ -6,10 +6,9 @@
 #include <string>
 #include <fstream>
 #include <inttypes.h>
-#include <list>
 #include <vector>
+#include <queue>
 #include <sstream>
-#include <math.h>
 #include <limits>
 
 #include "definitions.hpp"
@@ -22,6 +21,8 @@ using namespace std;
 void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint &nEdges,
 	      nint &maxDist,nint &home,nint &target,vector<pNN> ** graph,
 	      vector<pNN> ** gasGraph,vector<nint> & oysterCities);
+
+void limitedDijkstra(vector<pNN> [],vector<nint> &,nint,nint,nint,nint);
 
 
 #endif /*MAIN_H*/
