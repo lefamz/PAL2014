@@ -22,6 +22,9 @@ int main(int argc, char **argv) {
     loadData("../examples/pub07",nNNodes,nONodes,nNodes,nEdges,maxDist,home,target,&origGraph,&gasGraph,oysterCities);
     
     if(home==target){
+      cout << 0 << endl;
+      delete [] origGraph;
+      delete [] gasGraph;
       return 0;
     }
     
@@ -29,10 +32,12 @@ int main(int argc, char **argv) {
     limitedDijkstra(origGraph,firstStage,home,target,maxDist,nNodes);
     
     
-  /**/if(firstStage[target] < infinity){
-	cout << firstStage[target] << endl;
+    if(firstStage[target] < infinity){
+      cout << firstStage[target] << endl;
+      delete [] origGraph;
+      delete [] gasGraph;
       return 0;
-    }
+   }
     
   /*/  
     cout << "firstStage: ";
