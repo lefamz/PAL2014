@@ -83,6 +83,9 @@ int main(int argc, char **argv) {
     
     cout << firstStage[target] << endl;
     
+    delete [] origGraph;
+    delete [] gasGraph;
+    
     return 0;
 }
 
