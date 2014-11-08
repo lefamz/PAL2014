@@ -173,7 +173,8 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
 	      nint &maxDist,nint &home,nint &target,vector<pNN> ** graph,
 	      vector<pNN> ** gasGraph,vector<nint> & oysterCities){
     string s;
-    char buff[7];
+    nint buffSize = 50;
+    char buff[buffSize];
     stringstream ss;
    
 #if DBG
@@ -187,10 +188,10 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
 #endif
     ss << s;
     
-    ss.getline(buff,7,' ');
+    ss.getline(buff,buffSize,' ');
     nONodes = (nint)(atoi(buff));
    
-    ss.getline(buff,7,' ');
+    ss.getline(buff,buffSize,' ');
     nNNodes = (nint)(atoi(buff));
     
     nNodes = nONodes + nNNodes;
@@ -198,16 +199,16 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
     *graph = new vector<pNN>[nNodes];
     *gasGraph = new vector<pNN>[nNodes];    
     
-    ss.getline(buff,7,' ');
+    ss.getline(buff,buffSize,' ');
     nEdges = (nint)(atoi(buff));
     
-    ss.getline(buff,7,' ');
+    ss.getline(buff,buffSize,' ');
     maxDist = (nint)(atoi(buff));
     
-    ss.getline(buff,7,' ');
+    ss.getline(buff,buffSize,' ');
     home = (nint)(atoi(buff));
     
-    ss.getline(buff,7,' ');
+    ss.getline(buff,buffSize,' ');
     target = (nint)(atoi(buff));
     
     ss.clear();
@@ -226,7 +227,7 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
 #endif
       ss << s;
        
-      ss.getline(buff,7,' ');
+      ss.getline(buff,buffSize,' ');
       nint index = (nint)(atoi(buff));
       oysterCities.push_back(index);  
 #if DBG
@@ -250,13 +251,13 @@ void loadData(std::string file, nint& nNNodes, nint& nONodes, nint &nNodes, nint
       
       ss << s;
       
-      ss.getline(buff,7,' ');
+      ss.getline(buff,buffSize,' ');
       nint from = (nint)(atoi(buff));
       
-      ss.getline(buff,7,' ');
+      ss.getline(buff,buffSize,' ');
       nint to = (nint)(atoi(buff));
       
-      ss.getline(buff,7,' ');
+      ss.getline(buff,buffSize,' ');
       nint len = (nint)(atoi(buff));
       
       (*graph)[from].push_back(pNN(to,len));
