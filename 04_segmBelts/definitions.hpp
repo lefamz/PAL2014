@@ -1,6 +1,4 @@
 // normal int
-typedef unsigned long int nint;
-
-typedef double mfloat;
-typedef std::pair<nint,nint> pNN;
-
+typedef int nint;
+typedef uint16_t sint;
+typedef std::pair<std::string,std::string> pSS;
