@@ -9,8 +9,10 @@
 #include <queue>
 #include <sstream>
 #include <limits>
+#include <unordered_map>
 #include <map>
 #include <string>
+#include <algorithm>
 
 #include "definitions.hpp"
 #include "classes.hpp"
@@ -19,8 +21,10 @@
 
 using namespace std;
 
+//string findLexSmallest2(string str);
 string findLexSmallest(string str);
-string findReprez(vector<string> disks);
+string findReprez(vector<nint> &,vector<string> &);
+string vec2String(vector<string>);
 
 #endif /*MAIN_H*/
 

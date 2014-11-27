@@ -33,7 +33,7 @@ public:
   nint from, index;
   bool rDir;
   
-  MyString();
+  MyString(){};
   
   MyString(bool dir,std::string s,nint i, nint f){
     str = s;
