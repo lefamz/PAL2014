@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
  // cout << ("abs" < "hdh") << endl;
    
 #if DBG
-    string inadr = "../examples/pub05";
+    string inadr = "../examples/pub04";
     inadr.append(".in");
     
     ifstream inFile (inadr.data());  
@@ -190,7 +190,7 @@ string findReprez(vector<nint> & smallestDisks, vector<string> & disks){
     b = queue->top();
   //  cout << "level " << level << " New B set: " << (char)b << endl;
     
-    if(level == disks.size()-1) break;
+    if(level == disks.size()-1 || queue->size()==1) break;
     
     while(!queue->empty()){
       MyString c = queue->top();
@@ -291,7 +291,7 @@ string findLexSmallest(string str){
     b = queue->top();
   //  cout << "level " << level << " New B set: " << (char)b << endl;
     
-    if(level == str.size()-1) break;
+    if(level == str.size()-1 || queue->size()==1) break;
     
     while(!queue->empty()){
       MyChar c = queue->top();
