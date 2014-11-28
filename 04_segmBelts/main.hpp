@@ -17,13 +17,13 @@
 #include "definitions.hpp"
 #include "classes.hpp"
 
-#define DBG 0
+#define DBG 1
 
 using namespace std;
 
 //string findLexSmallest2(string str);
 string findLexSmallest(string str);
-string findReprez(vector<nint> &,vector<string> &);
+string findBeltReprez(vector<nint> &,vector<string> &);
 string vec2String(vector<string>);
 
 #endif /*MAIN_H*/

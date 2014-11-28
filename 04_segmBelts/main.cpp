@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
  // cout << ("abs" < "hdh") << endl;
    
 #if DBG
-    string inadr = "../examples/pub04";
+    string inadr = "../examples/pub05";
     inadr.append(".in");
     
     ifstream inFile (inadr.data());  
@@ -42,13 +42,16 @@ int main(int argc, char **argv) {
 ////////////////// data structures
 
 unordered_map<string,nint> hashMap;
-int groupID = 0;
 vector<vector<nint> > groups;
+int groupID = 0;
+
+unordered_map<string,string> diskCache;
+unordered_map<string,string>::iterator cacheIterator;
 
 ////////////////// end data structures
 
   
-    for(nint i=0;i<N;i++){
+for(nint i=0;i<N;i++){
 #if DBG
       getline(inFile,s);      
 #else
@@ -58,31 +61,47 @@ vector<vector<nint> > groups;
        
       ss.getline(buff,buffSize,' ');
       nint id = (nint)(atoi(buff));
-      
+  
 #if DBG
     //  cout << id << endl;
-#endif  
-      vector<string> disks;
-      vector<nint> smallestDisks;
-     // array<char>
-      
-      ss.getline(buff,D1+1,' ');
-      
-      string diskReprez = findLexSmallest(buff);
-      string smallest=diskReprez;
-      
-      smallestDisks.push_back(0);
-      disks.push_back(diskReprez);
-   //   cout << "cmp: " << smallest << " a "<< diskReprez << endl;
-  //    cout << diskReprez << endl;
-      
-      for (nint j = 1;j<D2;j++){
+#endif
+    string beltReprez;
+    vector<string> disks;
+    vector<nint> smallestDisks;
+      // array<char>
+	
+    ss.getline(buff,D1+1,' ');
+	
+    string diskReprez;
+	
+    cacheIterator=diskCache.find(buff);
+    if (cacheIterator == diskCache.end()){
+      diskReprez=findLexSmallest(buff);
+      diskCache.insert(pair<string,string>(buff,diskReprez));
+    } else {
+      diskReprez=(*cacheIterator).second;
+    }
+	
+    string smallest=diskReprez;
+	
+    smallestDisks.push_back(0);
+    disks.push_back(diskReprez);
+    //   cout << "cmp: " << smallest << " a "<< diskReprez << endl;
+    //    cout << diskReprez << endl;
+	
+    for (nint j = 1;j<D2;j++){
 	ss.getline(buff,D1+1,' ');
-	diskReprez = findLexSmallest(buff);
-	//cout << j << " cmp: " << smallest << " a "<< diskReprez << endl;
+	cacheIterator=diskCache.find(buff);
+	
+	if (cacheIterator == diskCache.end()){
+	  diskReprez=findLexSmallest(buff);
+	  diskCache.insert(pair<string,string>(buff,diskReprez));
+	} else {
+	  diskReprez=(*cacheIterator).second;
+	}
+      
 	if(diskReprez < smallest){
-	//  smallest.clear();
-	//  cout << "Ding" << endl;
+	  //  cout << "Ding" << endl;
 	  smallest=diskReprez;
 	  smallestDisks.clear();
 	  smallestDisks.push_back(j);
@@ -90,15 +109,14 @@ vector<vector<nint> > groups;
 	  smallestDisks.push_back(j);
 	}
 
-	//cout << diskReprez << endl;
-	//cout << "smallest: " << smallest << " sz: " << smallestDisks.size() << endl;
-      
+      //cout << diskReprez << endl;
+      //cout << "smallest: " << smallest << " sz: " << smallestDisks.size() << endl;
+    
 	disks.push_back(diskReprez);
       }
-      
-      string beltReprez;
+        
       if(smallestDisks.size()==D2) beltReprez = vec2String(disks);
-      else beltReprez = findReprez(smallestDisks,disks);
+      else beltReprez = findBeltReprez(smallestDisks,disks);      
       
       //cout << beltReprez << endl;
   
@@ -118,38 +136,35 @@ vector<vector<nint> > groups;
 	groups[grId].push_back(id);
       }
 
-    }
+}
 #if DBG
       inFile.close();
 #endif   
       
-  cout << groups.size() << endl;
+cout << groups.size() << endl;
   
-  struct comparator{
-    inline bool operator()(const vector<nint> & a, const vector<nint> & b){
-      //cout << "cmp " << a.size() << " " << b.size() << endl;
-      if (a.size() != b.size()){
-	return (a.size() > b.size());
-      }
-      else {
-	return a[0] < b[0];
-      }
+struct comparator{
+  inline bool operator()(const vector<nint> & a, const vector<nint> & b){
+  //cout << "cmp " << a.size() << " " << b.size() << endl;
+    if (a.size() != b.size()){
+      return (a.size() > b.size());
+    } else {
+      return a[0] < b[0];
     }
-    
-  };
-
-  sort(groups.begin(),groups.end(),comparator());
-  
-//  cout << "done" << endl;
-  
-  for(nint i=0;i<groups.size();i++){
-    for(nint j=0;j<groups[i].size();j++){
-      cout << groups[i][j] << " ";
-    }
-    cout << endl;
   }
+    
+};
+
+sort(groups.begin(),groups.end(),comparator());
+  
+for(nint i=0;i<groups.size();i++){
+  for(nint j=0;j<groups[i].size();j++){
+    cout << groups[i][j] << " ";
+  }
+  cout << endl;
+}
    
-   return 0;
+return 0;
 }
 
 string vec2String(vector<string> vec){
@@ -161,7 +176,7 @@ string vec2String(vector<string> vec){
   return ss.str();
 }
 
-string findReprez(vector<nint> & smallestDisks, vector<string> & disks){
+string findBeltReprez(vector<nint> & smallestDisks, vector<string> & disks){
   
   nint smallest = smallestDisks[0];
   
@@ -218,8 +233,7 @@ string findReprez(vector<nint> & smallestDisks, vector<string> & disks){
 	
 	queue->pop();
      }
-      
-   //  cout << "b check: " << (char)b << endl;
+
    }
    
    level++;
