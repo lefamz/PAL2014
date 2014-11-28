@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
   
   string s;
   
-  nint buffSize = 10000;
+  const nint buffSize = 10000;
   char buff[buffSize];
   stringstream ss;
   
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     s.clear();
     
 #if DBG
-  /*  cout << "N of belts: " << N <<  " D1(len of disk): " << D1 << " D2(n of disks): " << D2 << endl;/**/
+  //  cout << "N of belts: " << N <<  " D1(len of disk): " << D1 << " D2(n of disks): " << D2 << endl;
 #endif
 
 
