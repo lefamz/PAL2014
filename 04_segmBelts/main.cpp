@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 ////////////////// data structures
 
 unordered_map<string,nint> hashMap;
-int mapSize = 0;
+int groupID = 0;
 vector<vector<nint> > groups;
 
 ////////////////// end data structures
@@ -108,8 +108,8 @@ vector<vector<nint> > groups;
       unordered_map<string,nint>::iterator it = hashMap.find(beltReprez);
       
       if(it == hashMap.end()){
-	hashMap.insert(pair<string,nint>(beltReprez,mapSize));
-	mapSize++;
+	hashMap.insert(pair<string,nint>(beltReprez,groupID));
+	groupID++;
 	vector<nint> vec;
 	vec.push_back(id);
 	groups.push_back(vec);
@@ -137,13 +137,6 @@ vector<vector<nint> > groups;
     }
     
   };
-  
-//  cout << "sorting .." << endl;
-  
-/*  for(nint i = 0;i<groups.size();i++){
-    sort(groups[i].begin(),groups[i].end());
-  }
- */
 
   sort(groups.begin(),groups.end(),comparator());
   
@@ -169,25 +162,8 @@ string vec2String(vector<string> vec){
 }
 
 string findReprez(vector<nint> & smallestDisks, vector<string> & disks){
-   // array for roots of tree, candidates for beginning of lex smallest word
-  
   
   nint smallest = smallestDisks[0];
-  
- /* for(nint i = 0;i<disks.size();i++){
-    
-    string disk = disks[i];
-    
-    if(disk < smallest){
-      smallestDisks.clear();
-      smallestDisks.push_back(i);
-      smallest = disk;      
-    } else if(smallest == disk){
-      smallestDisks.push_back(i);
-    }
-  }
-  
-  if (smallestDisks.size()==disks.size()) return vec2String(disks);*/
   
   priority_queue<MyString> queue1;
   priority_queue<MyString> queue2;  
@@ -267,109 +243,6 @@ string findReprez(vector<nint> & smallestDisks, vector<string> & disks){
   
   return ss.str();
 }
-
-/*
-string findLexSmallest(vector<nint> smallestLetters, string str){
-  sint c = smallestLetters[0];
-  // array for roots of tree, candidates for beginning of lex smallest word
- /* vector<nint> smallestLetters;
-  
-  sint c = numeric_limits<sint>::max();
-  
-  for(nint i = 0;i<str.size();i++){
-    
-    sint stringChar = (sint)str[i];
-    
-    if(stringChar < c){
-      smallestLetters.clear();
-      smallestLetters.push_back(i);
-      c = stringChar;      
-    } else if(c == stringChar){
-      smallestLetters.push_back(i);
-    }
-  }
-  
-  if (smallestLetters.size()==str.size()) return str;/**/
-  
- /* priority_queue<MyChar> queue1;
-  priority_queue<MyChar> queue2;  
-  priority_queue<MyChar> * queue;
-  
-  for(nint i = 0;i<smallestLetters.size();i++){
-    queue1.push(MyChar(0,c,smallestLetters[i],smallestLetters[i]));
-    queue1.push(MyChar(1,c,smallestLetters[i],smallestLetters[i]));
-  }
-  
-  nint level = 0;
-  MyChar b;
-  
-  while(1){
-    
-    if(level%2 == 0){
-      queue = &queue1;
-      queue2 = priority_queue<MyChar>();
-    } else {
-      queue = &queue2;
-      queue1 = priority_queue<MyChar>();
-    }
-    
-    b = queue->top();
-  //  cout << "level " << level << " New B set: " << (char)b << endl;
-    
-    if(level == str.size()-1) break;
-    
-    while(!queue->empty()){
-      MyChar c = queue->top();
-      //cout << (char)b.ch << " " << (char)c.ch << endl;
-      if(b.ch < c.ch){
-	break;
-      } else {
-	nint neighbour;
-	sint neighChar;
-	if(c.rDir){
-	  neighbour = (c.index + 1) % str.size();
-	  neighChar = (sint)str[neighbour];
-	} else {
-	  neighbour = (c.index + (str.size() - 1)) % str.size();
-	  neighChar = (sint)str[neighbour];
-	}
-	
-	if(level%2 == 0){
-	 queue2.push(MyChar(c.rDir,neighChar,neighbour,c.from));
-	// cout << "do levelu: " << level+1 << " " <<  (char) neighChar << " pos " << neighbour << endl;
-	} else {
-	 queue1.push(MyChar(c.rDir,neighChar,neighbour,c.from));
-	// cout << "do levelu: " << level+1 << " " <<  (char) neighChar << " pos " << neighbour << endl;
-	}
-	
-	queue->pop();
-     }
-      
-   //  cout << "b check: " << (char)b << endl;
-   }
-   
-   level++;
-  
-  }
-  
-  MyChar start = queue->top();
-  stringstream ss;
-  
-  if (start.rDir){
-      ss << str[start.from];
-      for (nint i = (start.from + 1) % str.size();i!=start.from;i=(i+1)%str.size()){
-	ss << str[i];
-      }
-  } else {
-     ss << str[start.from];
-     for (nint i=(start.from + (str.size()-1))%str.size();i!=start.from;i = (i + (str.size()-1))%str.size()){
-       ss << str[i];
-     }
-  }
-  
-  return ss.str();
-}
-*/
 
 string findLexSmallest(string str){
  
