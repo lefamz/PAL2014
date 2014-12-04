@@ -6,15 +6,14 @@
 class CharNode{
 public:
   // character
-  sint ch;
-  nint level;
-  nint accepted;
+  sint ch=(sint)'!';
+  nint level=0;
+  nint accepted=0;
+ // bool hasChildren = false;
   
-  CharNode * children[27];
+  CharNode * children[27]={ 0 };
   
   CharNode(){
-    ch = '!';
-    level = 0;
   }
   
   CharNode(sint c){
