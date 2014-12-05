@@ -17,11 +17,11 @@ int main(int argc, char **argv) {
     inadr.append(".in");
     
     ifstream inFile (inadr.data());  
-    getline(inFile,s); 
+    getline(inFile,s);
 #else
     getline(cin,s);
-#endif  
-    
+    //cin >> s;
+#endif   
     ss << s;
     ss.getline(buff,buffSize,' ');
     alphabet = buff;
@@ -46,24 +46,30 @@ int main(int argc, char **argv) {
     
     for (nint i = 0;i<N;i++){
 #if DBG 
-      getline(inFile,s);  
+     getline(inFile,s);  
+     // inFile >> s;
 #else
-      getline(cin,s);
+     // cin >> s;
+     getline(cin,s);
 #endif
       set<string> acceptedWords;
       
       nint nWords = (nint)(atoi(s.data()));
 #if DBG
    //   cout << "nWords: " << nWords << endl;
-#endif     
+#endif   
+      ss.clear();
       for(nint j = 0;j<nWords;j++){
-	ss.clear();
+	
 	s.clear();
 #if DBG 
 	getline(inFile,s);  
+	//inFile >> s;
+	//cout << s << endl;;
 	
 #else
 	getline(cin,s);
+	//cin >> s;
 #endif	
 	//if((int)(s[s.length()-1] - 'a' < 0)){
 	   // acceptedWords.insert(s.substr(0,s.length()-1));
@@ -79,14 +85,15 @@ int main(int argc, char **argv) {
       
       set<string>::iterator it;
       for(it=acceptedWords.begin();it!=acceptedWords.end();++it){
-	string str = (*it);
-	/**/if(str[str.length()-1] == 13){
-	  if((str.size()-1) > K) continue;
-	  insertIntoPrefixTree(root,str,D, true);	  
+	
+	
+	if(s[s.length()-1]  == 13){
+	  if((*it).size()-1 > K) continue;
+	  insertIntoPrefixTree(root,(*it),D, true);
 	}
-	else{/**/
-	  if((str.size()) > K) continue;
-	  insertIntoPrefixTree(root,str,D, false);
+	else{
+	  if((*it).size() > K) continue;
+	  insertIntoPrefixTree(root,(*it),D, false);
 	}
       }
 
@@ -117,7 +124,56 @@ return 0;
 }
 
 void deletePrefixTree(CharNode & root){
-  cout << "Not yet implemented!" << endl;
+  queue<CharNode *> l1;
+  queue<CharNode *> l2;
+  queue<CharNode *> * q;
+  
+  l1.push(&root); bool r = true;
+  
+  nint level = 0;
+  q = & l1;
+  while(!q->empty()){
+    
+      
+    while(!q->empty()){
+      
+      CharNode * node = q->front();
+      q->pop();
+      
+      
+      for(nint i = 0;i<27;i++){
+	if(node->children[i]!=0){
+	//  cout << "push" << endl;
+	  if(level%2 == 0){
+	    l2.push((node->children[i]));
+	  } else {
+	    l1.push((node->children[i]));
+	  }
+	  
+	}  
+	  
+      }
+      
+      if(r) r = false;
+      else{
+	delete node;
+      }
+      
+    }
+    
+    //cout << endl;
+    
+     if(level%2 == 0){
+	q=&l2;
+     } else {
+	q=&l1;
+     }
+     
+     level++;
+   
+  }
+  
+  //cout << "cleaning done" << endl;
 }
 
 nint calculateSupport(CharNode & root,nint D, nint K, nint aSize){
@@ -156,21 +212,17 @@ nint calculateSupport(CharNode & root,nint D, nint K, nint aSize){
   return res;
 }
 
-void insertIntoPrefixTree(CharNode & root,string s,nint D, bool strangeChar){
+void insertIntoPrefixTree(CharNode & root,string s,nint D,bool strangeChar){
  
   CharNode * node = & root;
   
   nint maxAccepted=0;
-  nint sz = 0;
+  nint sz = s.size();
   
-  if(strangeChar){
-    sz = s.length()-1;
-  } else {
-    sz = s.length();
-  }
+  if(strangeChar) sz--;
   
   for(nint i = 0; i<sz; i++){
-	sint c = s[i]-'a';    
+	sint c = (sint)(s[i]-'a');    
 	
 	if(node->children[c]==0){
 	  CharNode * chn = new CharNode(c);
@@ -196,27 +248,25 @@ void insertIntoPrefixTree(CharNode & root,string s,nint D, bool strangeChar){
   node->accepted=maxAccepted+1;
   
   if (node->accepted < D){
-      stack<CharNode> st;
+      stack<CharNode *> st;
       
       for(nint i=0;i<27;i++){
-	if(node->children[i]!= 0) st.push(*(node->children[i]));
+	if(node->children[i]!= 0) st.push((node->children[i]));
       }
       
       while(!st.empty()){
-	CharNode cN = st.top();
+	CharNode * cN = st.top();
 	st.pop();
 
-	if(cN.accepted > 0) cN.accepted++;
+	if(cN->accepted > 0) cN->accepted++;
 	
 	for(nint i=0;i<27;i++){
-	    if(cN.children[i]!=0){
-	      st.push(*(cN.children[i]));
+	    if(cN->children[i]!=0){
+	      st.push((cN->children[i]));
 	    }
 	}
       }
       
-  } else {
-    for(nint i=0;i<27;i++) node->children[i]=0;
   }
 }
 
