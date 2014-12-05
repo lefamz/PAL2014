@@ -20,8 +20,11 @@
 
 using namespace std;
 
-void insertIntoPrefixTree(CharNode & root,string s,nint D);
+void insertIntoPrefixTree(CharNode & root,string s,nint D,bool strangeChar);
 void printTree(CharNode & root);
 nint calculateSupport(CharNode & root,nint D, nint K, nint aSize);
+void deletePrefixTree(CharNode & root);
+
+
 #endif /*MAIN_H*/
 

@@ -13,13 +13,11 @@ int main(int argc, char **argv) {
   stringstream ss;
   
 #if DBG  
-    string inadr = "../examples/pub10";
+    string inadr = "../examples/pub04";
     inadr.append(".in");
     
     ifstream inFile (inadr.data());  
-    getline(inFile,s);
-    cout << s << endl;
-    
+    getline(inFile,s); 
 #else
     getline(cin,s);
 #endif  
@@ -63,14 +61,16 @@ int main(int argc, char **argv) {
 	s.clear();
 #if DBG 
 	getline(inFile,s);  
-	//cout << s << endl;
+	
 #else
 	getline(cin,s);
 #endif	
-	if((int)(s[s.length()-1] - 'a' < 0)){
+	//if((int)(s[s.length()-1] - 'a' < 0)){
 	   // acceptedWords.insert(s.substr(0,s.length()-1));
-	  s.erase(s.length()-1);
-	} //else {
+	//  s.erase(s.length()-1);
+	//  acceptedWords.insert(s.substr(0,s.length()-1));
+	//} else {
+	//if(s[s.length()-1] == 13) cout << "ding" << endl;
 	  acceptedWords.insert(s);
 	//}
 	 
@@ -79,10 +79,15 @@ int main(int argc, char **argv) {
       
       set<string>::iterator it;
       for(it=acceptedWords.begin();it!=acceptedWords.end();++it){
-	
-	if((*it).size() > K) continue;
-	insertIntoPrefixTree(root,(*it),D);
-	
+	string str = (*it);
+	/**/if(str[str.length()-1] == 13){
+	  if((str.size()-1) > K) continue;
+	  insertIntoPrefixTree(root,str,D, true);	  
+	}
+	else{/**/
+	  if((str.size()) > K) continue;
+	  insertIntoPrefixTree(root,str,D, false);
+	}
       }
 
     }
@@ -99,13 +104,20 @@ int main(int argc, char **argv) {
     
     insertIntoPrefixTree(root,l4,2);*/
     
-   // printTree(root);
+  //  printTree(root);
     
-    cout << "------------------------" << endl;
+  //  cout << "------------------------" << endl;
     
     cout << calculateSupport(root,D,K,aSize) << endl;
+    
+    deletePrefixTree(root);
+    
   
 return 0;
+}
+
+void deletePrefixTree(CharNode & root){
+  cout << "Not yet implemented!" << endl;
 }
 
 nint calculateSupport(CharNode & root,nint D, nint K, nint aSize){
@@ -131,6 +143,8 @@ nint calculateSupport(CharNode & root,nint D, nint K, nint aSize){
 	
 	res=(res+hlp) % 100000;
       }
+      
+      continue;
     }
     
     for(nint i =0;i<27;i++){
@@ -142,19 +156,26 @@ nint calculateSupport(CharNode & root,nint D, nint K, nint aSize){
   return res;
 }
 
-void insertIntoPrefixTree(CharNode & root,string s,nint D){
+void insertIntoPrefixTree(CharNode & root,string s,nint D, bool strangeChar){
  
   CharNode * node = & root;
   
   nint maxAccepted=0;
- 
-  for(nint i = 0; i<s.size(); i++){
+  nint sz = 0;
+  
+  if(strangeChar){
+    sz = s.length()-1;
+  } else {
+    sz = s.length();
+  }
+  
+  for(nint i = 0; i<sz; i++){
 	sint c = s[i]-'a';    
 	
 	if(node->children[c]==0){
 	  CharNode * chn = new CharNode(c);
 	//  cout << "insert:" << chn->ch <<  endl;
-	  chn->level=node->level+1;
+	  chn->level=(node->level)+1;
 	  //chn->accepted=0;
 	  node->children[c]=chn;
 	//  node->hasChildren = true;
@@ -175,36 +196,27 @@ void insertIntoPrefixTree(CharNode & root,string s,nint D){
   node->accepted=maxAccepted+1;
   
   if (node->accepted < D){
-    
-  //  if(node->hasChildren){
       stack<CharNode> st;
       
       for(nint i=0;i<27;i++){
-	
-	CharNode * pCN = node->children[i];
-	if(pCN != 0) st.push(*pCN);
+	if(node->children[i]!= 0) st.push(*(node->children[i]));
       }
       
       while(!st.empty()){
 	CharNode cN = st.top();
 	st.pop();
+
+	if(cN.accepted > 0) cN.accepted++;
 	
-	//if(cN.hasChildren){
-	  if(cN.accepted > 0) cN.accepted++;
-	  for(nint i=0;i<27;i++){
+	for(nint i=0;i<27;i++){
 	    if(cN.children[i]!=0){
 	      st.push(*(cN.children[i]));
 	    }
-	  }
-	  
-	//}
-	
-	
+	}
       }
-   // }
+      
   } else {
     for(nint i=0;i<27;i++) node->children[i]=0;
-    //node->children={0};
   }
 }
 
@@ -224,7 +236,7 @@ void printTree(CharNode & root){
       CharNode node = q->front();
       q->pop();
       
-  //    cout << (char)(node.ch+'a') << " level: " << node.level << " " << " accepted: " << node.accepted << " ";
+      cout << (char)(node.ch+'a') << " accepted: " << node.accepted << " ";
       
       for(nint i = 0;i<27;i++){
 	if(node.children[i]!=0){
