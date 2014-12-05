@@ -16,7 +16,7 @@
 #include "definitions.hpp"
 #include "classes.hpp"
 
-#define DBG 0
+#define DBG 1
 
 using namespace std;
 
