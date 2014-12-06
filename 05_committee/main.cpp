@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   stringstream ss;
   
 #if DBG  
-    string inadr = "../examples/pub04";
+    string inadr = "../examples/pub10";
     inadr.append(".in");
     
     ifstream inFile (inadr.data());  
@@ -46,11 +46,11 @@ int main(int argc, char **argv) {
     
     for (nint i = 0;i<N;i++){
 #if DBG 
-     getline(inFile,s);  
-     // inFile >> s;
+     //getline(inFile,s);  
+      inFile >> s;
 #else
-     // cin >> s;
-     getline(cin,s);
+      cin >> s;
+     //getline(cin,s);
 #endif
       set<string> acceptedWords;
       
@@ -63,22 +63,15 @@ int main(int argc, char **argv) {
 	
 	s.clear();
 #if DBG 
-	getline(inFile,s);  
-	//inFile >> s;
+	//getline(inFile,s);  
+	inFile >> s;
 	//cout << s << endl;;
 	
 #else
-	getline(cin,s);
-	//cin >> s;
+	//getline(cin,s);
+	cin >> s;
 #endif	
-	//if((int)(s[s.length()-1] - 'a' < 0)){
-	   // acceptedWords.insert(s.substr(0,s.length()-1));
-	//  s.erase(s.length()-1);
-	//  acceptedWords.insert(s.substr(0,s.length()-1));
-	//} else {
-	//if(s[s.length()-1] == 13) cout << "ding" << endl;
 	  acceptedWords.insert(s);
-	//}
 	 
 	
       }
@@ -86,15 +79,18 @@ int main(int argc, char **argv) {
       set<string>::iterator it;
       for(it=acceptedWords.begin();it!=acceptedWords.end();++it){
 	
+	if((*it).size() > K) continue;
 	
-	if(s[s.length()-1]  == 13){
+	insertIntoPrefixTree(root,(*it),D,false);
+	
+	/*if(s[s.length()-1]  == 13){
 	  if((*it).size()-1 > K) continue;
 	  insertIntoPrefixTree(root,(*it),D, true);
 	}
 	else{
 	  if((*it).size() > K) continue;
 	  insertIntoPrefixTree(root,(*it),D, false);
-	}
+	}*/
       }
 
     }
@@ -177,16 +173,16 @@ void deletePrefixTree(CharNode & root){
 }
 
 nint calculateSupport(CharNode & root,nint D, nint K, nint aSize){
-  stack<CharNode> st;
-  st.push(root);
+  stack<CharNode *> st;
+  st.push(&root);
   nint res = 0;
   
   while(!st.empty()){
-    CharNode cN = st.top();
+    CharNode * cN = st.top();
     st.pop();
     
-    if(cN.accepted >= D){
-      nint level = cN.level;
+    if(cN->accepted >= D){
+      nint level = cN->level;
       if(level == K){
 	res=(res+1) % 100000;
       } else {
@@ -204,7 +200,7 @@ nint calculateSupport(CharNode & root,nint D, nint K, nint aSize){
     }
     
     for(nint i =0;i<27;i++){
-      if(cN.children[i]!=0) st.push(*(cN.children[i]));
+      if(cN->children[i]!=0) st.push((cN->children[i]));
     }
     
   }
@@ -247,6 +243,7 @@ void insertIntoPrefixTree(CharNode & root,string s,nint D,bool strangeChar){
     
   node->accepted=maxAccepted+1;
   
+  // if we actualize accepted votes, we must also increase +1 all already accepted children
   if (node->accepted < D){
       stack<CharNode *> st;
       
